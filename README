@@ -1,0 +1,27 @@
+ds - deadsearch
+===============
+deadsearch is a minimalistic and user-friendly menu utility designed for Linux systems. 
+
+Installation
+============
+Clone the repository 
+
+Create a build directory inside the project's folder
+
+Change directory (cd) into the build folder 
+
+Prepare makefiles for building with 
+
+    cmake ..
+
+Finally, build the software 
+
+    make
+
+Running ds 
+==========
+The program accepts input options from stdin by default. The chosen option will be sent to the program's stdout 
+
+    echo "one two three" | ds 
+
+More information and extendibility can be found inside the program's help page (-h flag)
