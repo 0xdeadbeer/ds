@@ -4,17 +4,14 @@ deadsearch is a minimalistic and user-friendly menu utility designed for Linux s
 
 Installation
 ============
-Clone the repository 
-
-Create a build directory inside the project's folder
-
-Change directory (cd) into the build folder 
-
-Prepare makefiles for building with 
+1. Clone the repository 
+2. Create a build directory inside the project's folder
+3. Change directory (cd) into the build folder 
+4. Prepare makefiles for building with 
 
     cmake ..
 
-Finally, build the software 
+5. Finally, build the software 
 
     make
 
@@ -22,6 +19,6 @@ Running ds
 ==========
 The program accepts input options from stdin by default. The chosen option will be sent to the program's stdout 
 
-    echo "one two three" | ds 
+echo "one two three" | ds 
 
 More information and extendibility can be found inside the program's help page (-h flag)
