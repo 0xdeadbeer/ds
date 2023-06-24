@@ -1,1 +1,1 @@
-add_executable(ds deadsearch.c)
+add_executable(ds deadsearch.c levels.c)

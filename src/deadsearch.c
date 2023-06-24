@@ -8,6 +8,7 @@
 #include <X11/extensions/Xinerama.h>
 #endif
 
+// MACROS
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
@@ -27,6 +28,7 @@ int bar_border_color = 0x000000;
 // X11 sensitive variables
 Display *display;
 int default_screen;
+GC graphics_context;
 Window bar_window;
 Window root_window;
 XSetWindowAttributes window_attributes;
@@ -69,6 +71,14 @@ int get_focused_window(XWindowAttributes *focused_attributes) {
     return 0;
 }
 
+void process_input(void) {
+
+}
+
+void redraw_menu_contents(void) {
+
+}
+
 int setup_menu(void) {
     display = XOpenDisplay(0);
     if (display == NULL) {
@@ -77,6 +87,7 @@ int setup_menu(void) {
     }
 
     default_screen = DefaultScreen(display);
+    graphics_context = XDefaultGC(display, default_screen);
     root_window = RootWindow(display, default_screen);
 
     if (bar_width < 0 || bar_height < 0) {
@@ -129,6 +140,7 @@ int setup_menu(void) {
     bar_window = XCreateWindow(display, root_window, bar_x, bar_y, bar_width, bar_height, bar_border_width,
                                       CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect|CWBackPixel|CWBorderPixel, &window_attributes);
 
+    XSelectInput(display, bar_window, KeyPressMask | KeyReleaseMask);
 
     return 0;
 }
@@ -142,13 +154,12 @@ int main(int argc, char **argv) {
             case 'n':
                 bar_output_numeric = 1;
                 break;
-            case 'l':{
+            case 'l': {
                 int location = atoi(optarg);
                 if (location >= 0 && location <= 2)
                     bar_location = location;
                 break;
             }
-
             case 'h':
             default:
                 show_help();
@@ -164,10 +175,31 @@ int main(int argc, char **argv) {
     }
 
     XMapWindow(display, bar_window);
+    XSetInputFocus(display, bar_window, RevertToNone, CurrentTime);
+
+    XTextItem text_item;
+
+    text_item.chars = "lmao imagine";
+    text_item.nchars = 13;
+    text_item.delta = 10;
+    Font font = XLoadFont(display, "-*-helvetica-*-*-normal-*-14-*-*-*-*-*-*-*");
+    text_item.font = font;
+
+    XSetForeground(display, graphics_context, 0xFFFFFF);
+    XDrawText(display, bar_window, graphics_context, 10, 20, &text_item, 1);
+    XMapWindow(display, bar_window);
 
     for (;;) {
         XNextEvent(display, &event);
 
+        switch (event.type) {
+            case KeyPress:
+                process_input();
+                break;
+            case Expose:
+                redraw_menu_contents();
+                break;
+        }
     }
 
     XDestroyWindow(display, bar_window);
